@@ -2,7 +2,7 @@
 name = "certification-challenge"
 version = "0.1.0"
 description = "Agentic RAG Health Insurance Policy Explainer (Vercel deployable)"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "langchain",
     "rapidfuzz",
