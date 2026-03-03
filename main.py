@@ -1,11 +1,13 @@
 """
-FastAPI app: /health, /chat. Entrypoint for local (uvicorn) and Vercel.
+FastAPI app: / (chat UI), /health, /chat. Entrypoint for local (uvicorn) and Vercel.
 LangSmith tracing enabled at startup when LANGCHAIN_API_KEY is set.
 Secrets from environment only (Vercel Environment Variables in production).
 """
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 import lib
@@ -30,10 +32,17 @@ class ChatResponse(BaseModel):
     used_public_search: bool = False
 
 
-@app.get("/")
+def _chat_html() -> str:
+    path = Path(__file__).parent / "static" / "index.html"
+    if path.exists():
+        return path.read_text(encoding="utf-8")
+    return "<!DOCTYPE html><html><body><h1>Chat UI not found</h1><p>Use GET /health and POST /chat.</p></body></html>"
+
+
+@app.get("/", response_class=HTMLResponse)
 def root():
-    """Root: point to health and chat."""
-    return {"message": "Certification Challenge - Agentic RAG", "health": "/health", "chat": "POST /chat"}
+    """Serve chat UI so users can ask questions in the browser."""
+    return _chat_html()
 
 
 @app.get("/health")
