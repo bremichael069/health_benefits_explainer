@@ -30,6 +30,12 @@ class ChatResponse(BaseModel):
     used_public_search: bool = False
 
 
+@app.get("/")
+def root():
+    """Root: point to health and chat."""
+    return {"message": "Certification Challenge - Agentic RAG", "health": "/health", "chat": "POST /chat"}
+
+
 @app.get("/health")
 def health():
     """No keys required. Use for Vercel health checks."""
