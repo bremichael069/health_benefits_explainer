@@ -80,6 +80,13 @@ Request flow for a `/chat` request:
 
 Optional: `LANGCHAIN_PROJECT`, `OPENAI_CHAT_MODEL`, `OPENAI_RAG_MODEL`, `OPENAI_EMBEDDING_MODEL`, `POLICY_PDF_PATH`.
 
+## Dependencies
+
+- **Vercel / production:** `pyproject.toml` lists a **minimal** set (FastAPI, LangChain/LangGraph, OpenAI, Tavily, pypdf) so the serverless bundle stays under the 500 MB limit. The app runs with the **naive (semantic) retriever** only; BM25, Cohere rerank, parent-document, and multi-query are omitted and the ensemble falls back to the single retriever.
+- **Local notebook & eval:** For the full notebook and `python -m eval.eval` (RAGAS, all retrievers), install the extra deps:  
+  `pip install ragas datasets rank-bm25 langchain-cohere qdrant-client langchain-qdrant langsmith`  
+  (or use a separate venv with a full `requirements.txt` if you maintain one).
+
 ## Quick start (local)
 
 1. Copy `.env.sample` to `.env` and set `OPENAI_API_KEY` and `TAVILY_API_KEY`.
@@ -144,7 +151,7 @@ You’ll see your exact base URL (e.g. `https://certification-challenge-xxx.verc
 - **Tools:** Tavily `public_insurance_search`.
 - **Eval:** `python -m eval.eval` — RAGAS (faithfulness, context precision/recall); LangSmith when `LANGCHAIN_API_KEY` is set.
 
-**Optional dependencies:** `rank_bm25` (for BM25 retriever in ensemble). Cohere rerank and Parent Document / Multi-Query are used when available in your LangChain install.
+**Optional dependencies (local only):** `rank_bm25`, `langchain-cohere`, `qdrant-client`, `langchain-qdrant`, `ragas`, `datasets`, `langsmith` — used for BM25, Cohere rerank, parent-document, multi-query, and eval. Not included in the minimal Vercel bundle.
 
 ## Optional env vars
 
